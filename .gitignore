@@ -1,0 +1,7 @@
+*.js
+node_modules
+css
+*.css
+*.css.map
+.vscode
+.eslintrc.json
