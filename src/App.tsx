@@ -1,10 +1,9 @@
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { pomodoroListAtom, selectedPomodoroAtom, selectedPomodoroIDAtom } from "./atom.jotai";
-import { defaultPomodoro } from "./queryLocalStorage";
+import { useAtom, useAtomValue } from "jotai";
+import { pomodoroListAtom, selectedPomodoroAtom } from "./atom.jotai";
+import { defaultPomodoro, locatlStorareKey } from "./queryLocalStorage";
 
 export default function App() {
   const pomodoroList = useAtomValue(pomodoroListAtom);
-  const selectedPomodoroID = useAtomValue(selectedPomodoroIDAtom);
 
   return (
     <div className="app w-2/3 border-2 border-purple-700">
@@ -12,13 +11,7 @@ export default function App() {
       <PomodoroList />
       <button
         onPointerDown={() => {
-          if (pomodoroList.length) {
-            localStorage.setItem("selectedPomodoro", selectedPomodoroID);
-          } else {
-            localStorage.removeItem("pomodoroList");
-            localStorage.removeItem("selectedPomodoro");
-          }
-          localStorage.setItem("pomodoroList", JSON.stringify(pomodoroList));
+          localStorage.setItem(locatlStorareKey, JSON.stringify(pomodoroList));
         }}
       >
         SAVE DATA
@@ -44,9 +37,6 @@ function PomodoroClock() {
 
 function PomodoroList() {
   const [pomodoroList, dispatchPomodoroList] = useAtom(pomodoroListAtom);
-  const setSelectedPomodoro = useSetAtom(selectedPomodoroIDAtom);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { id: _, ...addedPomodoro } = defaultPomodoro;
 
   return (
     <div className="flex flex-col gap-1 bg-orange-700">
@@ -54,8 +44,8 @@ function PomodoroList() {
       {pomodoroList.map(pomodoro => (
         <div
           key={pomodoro.id}
-          onPointerDown={() => setSelectedPomodoro(pomodoro.id)}
-          className="bg-sky-500"
+          onPointerDown={() => dispatchPomodoroList({ type: "SELECT", payload: pomodoro.id })}
+          className={`${pomodoro.selected ? "bg-sky-700" : "bg-sky-300"}`}
         >
           <div className="bg-green-500 ">NAME - {pomodoro.name}</div>
           <div>SESSION - {pomodoro.session}</div>
@@ -71,7 +61,7 @@ function PomodoroList() {
           </button>
         </div>
       ))}
-      <button onPointerDown={() => dispatchPomodoroList({ type: "ADD", payload: addedPomodoro })}>
+      <button onPointerDown={() => dispatchPomodoroList({ type: "ADD", payload: defaultPomodoro })}>
         ADD POMODORO
       </button>
     </div>
