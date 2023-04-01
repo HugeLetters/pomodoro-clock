@@ -3,32 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta
-      http-equiv="X-UA-Compatible"
-      content="IE=edge"
-    />
-    <meta
       name="viewport"
       content="width=device-width, initial-scale=1.0"
     />
-    <title>Pomodoro Clock</title>
-    <link
-      id="global-style"
-      rel="stylesheet"
-      href="./src/css/index.css"
-    />
+    <title>Pomodoro Clock App</title>
   </head>
   <body>
-    <template id="one">
-      <div>TEST 1</div>
-      <slot name="desc">OHHHH IM TESTIIIING</slot>
-    </template>
-    <div>LOL</div>
-    <!-- <test-div></test-div> -->
-    <test-div><p slot="desc">1</p></test-div>
-    <!-- <test-div><span slot="desc">MODIFIED SLOT</span></test-div> -->
+    <div
+      id="root"
+      class="flex justify-center"
+    ></div>
     <script
-      src="./src/script/index.js"
       type="module"
+      src="/src/main.tsx"
     ></script>
   </body>
 </html>
