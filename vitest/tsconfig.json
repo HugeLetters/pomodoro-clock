@@ -1,0 +1,7 @@
+{
+  "compilerOptions": {
+    "types": ["vitest/globals"]
+  },
+  "include": ["./**.*", "./queryLocalStorage.test.ts"],
+  "extends": "../tsconfig.json"
+}

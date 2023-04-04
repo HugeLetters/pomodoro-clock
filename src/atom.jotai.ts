@@ -2,10 +2,8 @@ import { atom } from "jotai";
 import { atomWithReducer } from "jotai/utils";
 import { toast } from "react-toastify";
 import immer from "immer";
-import { queryLocalStorage, defaultPomodoro, Pomodoro } from "./queryLocalStorage";
+import { defaultPomodoro, Pomodoro, pomodoroSchema } from "./queryLocalStorage";
 import { nanoid } from "nanoid";
-
-const initPomodoroList = queryLocalStorage();
 
 const pomodoroListReducer = immer(
   (state: Pomodoro[], { payload, type }: PomodoroListReducerPayload) => {
@@ -27,14 +25,21 @@ const pomodoroListReducer = immer(
         break;
       }
       case "EDIT": {
-        const editedIndex = state.find(x => x.id === payload.id);
-        if (!editedIndex) {
+        const editedPomodoro = state.find(x => x.id === payload.id);
+        if (!editedPomodoro) {
           console.error(`Couldn't edit a Pomodoro with ID "${payload.id}"`);
           toast.error("There was an error trying to edit this Pomodoro");
           break;
         }
-        (editedIndex[payload.key] satisfies PomodoroFromInput[keyof PomodoroFromInput]) =
-          payload.value;
+        const parsedEdit = pomodoroSchema.partial().safeParse({ [payload.key]: payload.value });
+        if (!parsedEdit.success) {
+          console.error(parsedEdit.error.issues);
+          toast.warn(parsedEdit.error.issues[0].message);
+          return state;
+        }
+        const value = parsedEdit.data[payload.key];
+        if (!value) return state;
+        (editedPomodoro[payload.key] satisfies PomodoroFromInput[keyof PomodoroFromInput]) = value;
         break;
       }
       case "SELECT": {
@@ -43,13 +48,14 @@ const pomodoroListReducer = immer(
         });
         break;
       }
-      default:
-        return state;
+      case "SET": {
+        return payload;
+      }
     }
   }
 );
 
-export type PomodoroListReducerPayload =
+type PomodoroListReducerPayload =
   | {
       type: "DELETE";
       payload: Pomodoro["id"];
@@ -63,10 +69,11 @@ export type PomodoroListReducerPayload =
         value: Pomodoro[keyof PomodoroFromInput];
       };
     }
-  | { type: "SELECT"; payload: Pomodoro["id"] };
-type PomodoroFromInput = Omit<Pomodoro, "id" | "selected">;
+  | { type: "SELECT"; payload: Pomodoro["id"] }
+  | { type: "SET"; payload: Pomodoro[] };
+export type PomodoroFromInput = Omit<Pomodoro, "id" | "selected">;
 
-export const pomodoroListAtom = atomWithReducer(initPomodoroList, pomodoroListReducer);
+export const pomodoroListAtom = atomWithReducer([], pomodoroListReducer);
 export const selectedPomodoroAtom = atom(get => {
   const pomodoroList = get(pomodoroListAtom);
   if (!pomodoroList.length) return defaultPomodoro;

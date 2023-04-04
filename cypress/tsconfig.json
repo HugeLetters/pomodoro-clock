@@ -1,0 +1,5 @@
+{
+  "compilerOptions": { "isolatedModules": false },
+  "include": ["**/*.ts", "support/component.tsx"],
+  "extends": "../tsconfig.json"
+}

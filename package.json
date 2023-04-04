@@ -4,9 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "dev": "concurrently --hide \"cypress\" -n \"vite,tailwind,cypress,vitest\" -c \"#b43ffe,#38bdf8,#26e99c,#afc424\" \"vite\" \"tailwindcss -i ./src/index.pcss -o ./cypress/support/index.css --watch\" \"cypress open --component -b firefox\" \"vitest --silent --coverage\" ",
+    "build": "concurrently -n \"typescript,vite builder\" -c \"#3178c6,#b440fe\" \"tsc\" \"vite build && vite preview\"",
+    "preview": "vite preview",
+    "v:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "immer": "^9.0.21",
@@ -14,7 +15,8 @@
     "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-toastify": "^9.1.2"
+    "react-toastify": "^9.1.2",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/react": "^18.0.27",
@@ -22,7 +24,13 @@
     "@typescript-eslint/eslint-plugin": "^5.57.0",
     "@typescript-eslint/parser": "^5.57.0",
     "@vitejs/plugin-react-swc": "^3.0.0",
+    "@vitest/browser": "^0.29.8",
+    "@vitest/coverage-c8": "^0.29.8",
+    "@vitest/coverage-istanbul": "^0.29.8",
     "autoprefixer": "^10.4.14",
+    "concurrently": "^8.0.1",
+    "cypress": "^12.9.0",
+    "cypress-plugin-tab": "^1.0.5",
     "eslint": "^8.37.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.32.2",
@@ -30,9 +38,10 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.6",
-    "sass": "^1.60.0",
     "tailwindcss": "^3.3.1",
     "typescript": "^4.9.3",
-    "vite": "^4.1.0"
+    "vite": "^4.1.0",
+    "vitest": "^0.29.8",
+    "webdriverio": "^8.6.9"
   }
 }
