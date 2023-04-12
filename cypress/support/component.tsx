@@ -22,7 +22,7 @@ import "./index.css";
 import { mount } from "cypress/react18";
 import { useSetAtom } from "jotai";
 import { useEffect } from "react";
-import { localStorageKey, queryLocalStorage } from "../../src/queryLocalStorage";
+import queryLocalStorage, { localStorageKey } from "../../src/queryLocalStorage";
 import { pomodoroListAtom } from "../../src/atom.jotai";
 import pomodoroListFixture from "../../fixtures/pomodoroList";
 

@@ -1,5 +1,5 @@
 {
-  "compilerOptions": { "isolatedModules": false },
+  "compilerOptions": { "target": "ES2019", "isolatedModules": false },
   "include": ["**/*.ts", "support/component.tsx"],
   "extends": "../tsconfig.json"
 }

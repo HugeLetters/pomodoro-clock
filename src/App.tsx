@@ -1,35 +1,23 @@
-import { useAtomValue, useSetAtom } from "jotai";
-import { useEffect } from "react";
+import { useSetAtom } from "jotai";
+import { useRef } from "react";
 import { pomodoroListAtom } from "./atom.jotai";
-import { PomodoroClock } from "./Clock";
-import { PomodoroList } from "./List/List";
-import { localStorageKey, queryLocalStorage } from "./queryLocalStorage";
+import PomodoroClock from "./Components/Clock";
+import PomodoroList from "./Components/List";
+import queryLocalStorage from "./queryLocalStorage";
 
 export default function App() {
   const dispatchPomodoroList = useSetAtom(pomodoroListAtom);
-  useEffect(() => {
+  const init = useRef(true);
+
+  if (init) {
     dispatchPomodoroList({ type: "SET", payload: queryLocalStorage() });
-  }, [dispatchPomodoroList]);
+    init.current = false;
+  }
 
   return (
-    <div className="app w-2/3 border-2 border-purple-700">
+    <div className=" min-h-screen max-w-full">
       <PomodoroClock />
       <PomodoroList />
-      <SaveButton />
     </div>
-  );
-}
-
-function SaveButton() {
-  const pomodoroList = useAtomValue(pomodoroListAtom);
-
-  return (
-    <button
-      onClick={() => {
-        localStorage.setItem(localStorageKey, JSON.stringify(pomodoroList));
-      }}
-    >
-      SAVE DATA
-    </button>
   );
 }

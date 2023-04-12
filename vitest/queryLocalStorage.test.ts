@@ -1,4 +1,4 @@
-import { localStorageKey, queryLocalStorage } from "../src/queryLocalStorage";
+import queryLocalStorage, { localStorageKey } from "../src/queryLocalStorage";
 import { vi } from "vitest";
 import pomodoroList from "../fixtures/pomodoroList";
 

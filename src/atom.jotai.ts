@@ -28,13 +28,15 @@ const pomodoroListReducer = immer(
         const editedPomodoro = state.find(x => x.id === payload.id);
         if (!editedPomodoro) {
           console.error(`Couldn't edit a Pomodoro with ID "${payload.id}"`);
-          toast.error("There was an error trying to edit this Pomodoro");
+          toast.error("There was an error trying to edit this Pomodoro", { toastId: "editError" });
           break;
         }
         const parsedEdit = pomodoroSchema.partial().safeParse({ [payload.key]: payload.value });
         if (!parsedEdit.success) {
           console.error(parsedEdit.error.issues);
-          toast.warn(parsedEdit.error.issues[0].message);
+          parsedEdit.error.issues.forEach(issue => {
+            toast.warn(issue.message, { toastId: issue.message });
+          });
           return state;
         }
         const value = parsedEdit.data[payload.key];
@@ -79,7 +81,6 @@ export const selectedPomodoroAtom = atom(get => {
   if (!pomodoroList.length) return defaultPomodoro;
   const selectedPomodoro = pomodoroList.find(x => x.selected);
   if (!selectedPomodoro) {
-    // TODO how do I set the selected value for first pomodoro if this happens?
     toast.error("Couldn't find the selected pomodoro\nResetting the value");
     return defaultPomodoro;
   }

@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { PomodoroListElement } from "./Element";
+import PomodoroListElement from "./Element";
 import pomodoroListFixture from "../../fixtures/pomodoroList";
 import { pomodoroListAtom } from "../atom.jotai";
 
@@ -23,7 +23,7 @@ describe("<PomodoroListElement />", () => {
 
   describe("Correct input can be saved/disacrded", () => {
     beforeEach(() => {
-      cy.inputSession(4534543);
+      cy.inputSession(37);
     });
 
     it("press enter - new name gets saved", () => {

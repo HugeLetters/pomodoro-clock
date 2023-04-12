@@ -4,21 +4,26 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently --hide \"cypress\" -n \"vite,tailwind,cypress,vitest\" -c \"#b43ffe,#38bdf8,#26e99c,#afc424\" \"vite\" \"tailwindcss -i ./src/index.pcss -o ./cypress/support/index.css --watch\" \"cypress open --component -b firefox\" \"vitest --silent --coverage\" ",
-    "build": "concurrently -n \"typescript,vite builder\" -c \"#3178c6,#b440fe\" \"tsc\" \"vite build && vite preview\"",
+    "dev": "concurrently -P --hide \"cypress\" -n \"vite,tailwind,cypress,vitest\" -c \"#b43ffe,#38bdf8,#26e99c,#afc424\" \"vite {1}\" \"tailwindcss -i ./src/index.pcss -o ./cypress/support/index.css --watch\" \"cypress open --e2e -b firefox\" \"vitest --silent --coverage\" ",
+    "build": "concurrently -P -n \"typescript,vite builder\" -c \"#3178c6,#b440fe\" \"tsc\" \"vite build && vite preview {1}\"",
     "preview": "vite preview",
     "v:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@formkit/auto-animate": "^1.0.0-beta.6",
+    "d3": "^7.8.4",
+    "dayjs": "^1.11.7",
     "immer": "^9.0.21",
     "jotai": "^2.0.3",
     "nanoid": "^4.0.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.3",
     "react-toastify": "^9.1.2",
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/d3": "^7.4.0",
     "@types/react": "^18.0.27",
     "@types/react-dom": "^18.0.10",
     "@typescript-eslint/eslint-plugin": "^5.57.0",
@@ -29,6 +34,7 @@
     "@vitest/coverage-istanbul": "^0.29.8",
     "autoprefixer": "^10.4.14",
     "concurrently": "^8.0.1",
+    "cssnano": "^6.0.0",
     "cypress": "^12.9.0",
     "cypress-plugin-tab": "^1.0.5",
     "eslint": "^8.37.0",
