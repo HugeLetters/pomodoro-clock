@@ -25,7 +25,7 @@ dist-ssr
 coverage
 .vscode
 notes.md
-cypress/support
+cypress/support/*
 !cypress/support/commands.ts
 !cypress/support/component.tsx
 !cypress/support/e2e.tsx
