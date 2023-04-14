@@ -15,7 +15,7 @@ export default function App() {
   }
 
   return (
-    <div className=" min-h-screen max-w-full">
+    <div className="max-w-full p-2">
       <PomodoroClock />
       <PomodoroList />
     </div>

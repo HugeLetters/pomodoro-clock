@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -P --hide \"cypress\" -n \"vite,tailwind,cypress,vitest\" -c \"#b43ffe,#38bdf8,#26e99c,#afc424\" \"vite {1}\" \"tailwindcss -i ./src/index.pcss -o ./cypress/support/index.css --watch\" \"cypress open --e2e -b firefox\" \"vitest --silent --coverage\" ",
+    "dev": "vite",
+    "dev:full": "concurrently -P --hide \"cypress\" -n \"vite,tailwind,cypress,vitest\" -c \"#b43ffe,#38bdf8,#26e99c,#afc424\" \"vite {1}\" \"tailwindcss -i ./src/index.pcss -o ./cypress/support/index.css --watch\" \"cypress open --e2e -b firefox\" \"vitest --silent --coverage\" ",
     "build": "concurrently -P -n \"typescript,vite builder\" -c \"#3178c6,#b440fe\" \"tsc\" \"vite build && vite preview {1}\"",
     "preview": "vite preview",
     "v:coverage": "vitest run --coverage"
@@ -19,6 +20,7 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.3",
+    "react-icons": "^4.8.0",
     "react-toastify": "^9.1.2",
     "zod": "^3.21.4"
   },
@@ -44,10 +46,10 @@
     "postcss": "^8.4.21",
     "prettier": "^2.8.7",
     "prettier-plugin-tailwindcss": "^0.2.6",
+    "rollup-plugin-visualizer": "^5.9.0",
     "tailwindcss": "^3.3.1",
     "typescript": "^4.9.3",
     "vite": "^4.1.0",
-    "vitest": "^0.29.8",
-    "webdriverio": "^8.6.9"
+    "vitest": "^0.29.8"
   }
 }

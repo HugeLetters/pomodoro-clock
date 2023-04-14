@@ -5,6 +5,7 @@ import { defaultPomodoro } from "../queryLocalStorage";
 import PomodoroListElement from "./Element";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { toast } from "react-toastify";
+import { AiFillPlusSquare } from "react-icons/ai";
 
 export default function PomodoroList() {
   const [pomodoroList, dispatchPomodoroList] = useAtom(pomodoroListAtom);
@@ -23,23 +24,26 @@ export default function PomodoroList() {
   const [parent] = useAutoAnimate();
 
   return (
-    <div
-      className="flex flex-col gap-1 bg-orange-700"
-      ref={parent}
-    >
-      {pomodoroList.map(pomodoro => (
-        <PomodoroListElement
-          key={pomodoro.id}
-          pomodoro={pomodoro}
-          deleteMe={() => dispatchPomodoroList({ type: "DELETE", payload: pomodoro.id })}
-          selectMe={() => dispatchPomodoroList({ type: "SELECT", payload: pomodoro.id })}
-        />
-      ))}
+    <div className="flex flex-col items-center gap-1">
+      <div
+        className="flex max-w-full flex-col gap-2"
+        ref={parent}
+      >
+        {pomodoroList.map(pomodoro => (
+          <PomodoroListElement
+            key={pomodoro.id}
+            pomodoro={pomodoro}
+            deleteMe={() => dispatchPomodoroList({ type: "DELETE", payload: pomodoro.id })}
+            selectMe={() => dispatchPomodoroList({ type: "SELECT", payload: pomodoro.id })}
+          />
+        ))}
+      </div>
       <button
         onClick={() => dispatchPomodoroList({ type: "ADD", payload: defaultPomodoro })}
-        className="m-auto bg-sky-400 p-3"
+        className="w-10 self-center"
+        aria-label="add"
       >
-        ➕
+        <AiFillPlusSquare size="100%" />
       </button>
     </div>
   );

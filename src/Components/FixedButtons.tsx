@@ -12,12 +12,12 @@ export default function FixedButtons() {
     <>
       <button
         onClick={() => setToggle(x => !x)}
-        className="fixed left-1 top-1"
+        className="fixed left-1 top-1  "
+        aria-label="manage cache"
       >
         <svg
           viewBox="0 0 50 50"
-          className={`w-5 fill-current stroke-[5]
-          ${!toggle ? "animate-pulse " : ""} `}
+          className={`w-5 fill-current stroke-[5] ${!toggle ? "motion-safe:animate-pulse " : ""} `}
         >
           <clipPath id="circleClip">
             <circle
@@ -34,20 +34,23 @@ export default function FixedButtons() {
           <image
             href={tomatoPNG}
             width="40"
-            className={`translate-x-[5px] translate-y-[4px] transition-opacity duration-500
-             ${toggle ? "opacity-0" : "opacity-100"}`}
+            className={`translate-x-[5px] translate-y-[4px] transition-opacity duration-500 ${
+              toggle ? "opacity-0" : "opacity-100"
+            }`}
           />
           <path
             d="M0,0L50,50M50,0L0,50"
-            className={` transition-colors duration-500
-            ${toggle ? "stroke-neutral-800" : "stroke-transparent"} `}
+            className={` transition-colors duration-500 ${
+              toggle ? "stroke-neutral-800" : "stroke-transparent"
+            } `}
             clipPath="url(#circleClip)"
           />
         </svg>
       </button>
       <div
-        className={`fixed top-8 grid gap-y-3 transition-[opacity_left] duration-500
-         ${toggle ? "left-0 opacity-100" : " -left-[100%] opacity-0"}  `}
+        className={`fixed top-8 grid gap-y-3 transition-[opacity_left] duration-500 ${
+          toggle ? "left-1 opacity-100 " : " -left-[100%] opacity-0"
+        }  `}
       >
         <SaveButton disabled={!toggle} />
         <ClearCacheButton
@@ -90,7 +93,7 @@ function ClearCacheButton({ disabled }: { disabled: boolean }) {
       </button>
       <div
         className={`absolute left-0 top-0 -z-10 grid grid-cols-2 gap-1 ${
-          toggle ? "translate-x-[120%] opacity-100" : "translate-x-0 opacity-0"
+          toggle ? "translate-x-[117%] opacity-100" : "translate-x-0 opacity-0"
         }  transition-[opacity_translate]`}
       >
         <button

@@ -30,3 +30,4 @@ cypress/support/*
 !cypress/support/component.tsx
 !cypress/support/e2e.tsx
 !cypress/support/index.d.ts
+stats.html

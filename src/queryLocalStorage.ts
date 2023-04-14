@@ -42,7 +42,7 @@ export const defaultPomodoro = {
 } as const satisfies Pomodoro;
 
 export const pomodoroSchema = z.object({
-  name: z.coerce.string({ invalid_type_error: "Value must be a string" }).min(1).max(255),
+  name: z.coerce.string({ invalid_type_error: "Value must be a string" }).min(1).max(50),
   session: z.coerce.number({ invalid_type_error: "Value must be an integer" }).min(1).max(59).int(),
   pause: z.coerce.number({ invalid_type_error: "Value must be an integer" }).min(1).max(59).int(),
   selected: z.boolean(),
