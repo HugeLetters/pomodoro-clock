@@ -83,9 +83,9 @@ function ClearCacheButton({ disabled }: { disabled: boolean }) {
   const [toggle, setToggle] = useState(false);
 
   return (
-    <div className="relative gap-1">
+    <div className="relative">
       <button
-        className=" rounded-md border border-black bg-neutral-500 p-3"
+        className="rounded-md border border-black bg-neutral-500 p-3"
         onClick={() => setToggle(x => !x)}
         disabled={disabled}
       >

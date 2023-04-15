@@ -34,7 +34,7 @@ export default function PomodoroClock() {
       <PomodoroTimer
         session={pomodoro.session}
         pause={pomodoro.pause}
-        key={"timer:" + pomodoro.id}
+        id={pomodoro.id}
       />
     </div>
   );
@@ -59,10 +59,8 @@ function PomodoroProperties({ pomodoro }: PomodoroPropertiesProps) {
   const disable = pomodoro.id === defaultPomodoro.id;
   return (
     <>
-      <h1 className=" max-w-full break-words rounded-lg bg-neutral-800 text-center text-2xl">
-        {pomodoro.name}
-      </h1>
-      <div className="flex justify-center gap-8 self-stretch">
+      <h1 className="max-w-full break-words text-center text-2xl">{pomodoro.name}</h1>
+      <div className="flex gap-8">
         <RangeProperty
           edit={value => editValueByKey("session", value)}
           field={pomodoro.session}
@@ -108,7 +106,7 @@ function RangeProperty({ edit, field, label, disable }: RangePropertyProps) {
 }
 
 const updateInterval = 500;
-function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) {
+function PomodoroTimer({ pause, session, id }: Pick<Pomodoro, "session" | "pause" | "id">) {
   session = 60000 * session;
   pause = 60000 * pause;
   const start = useRef(Date.now());
@@ -119,6 +117,12 @@ function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) 
   const fragmentDuration = isSession ? session : pause;
   const isFragmentOver = timer > fragmentDuration;
   let preventFragmentOver = false;
+
+  function reset() {
+    setIsSession(true);
+    setTimer(0);
+    setIsPlaying(false);
+  }
 
   // field editing
   useEffect(() => {
@@ -137,6 +141,9 @@ function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) 
     setTimer(0);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pause]);
+  useEffect(() => {
+    reset();
+  }, [id]);
 
   // Start up a timer
   useEffect(() => {
@@ -160,8 +167,7 @@ function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) 
     });
     const alarm = new Audio(alarmMP3);
     alarm.volume = 0.15;
-    // todo turn this on later
-    false && alarm.play();
+    alarm.play();
 
     setIsSession(x => !x);
     setTimer(0);
@@ -169,25 +175,44 @@ function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isFragmentOver]);
 
+  const prevSession = useRef(session);
+  const prevPause = useRef(pause);
   useEffect(() => {
-    const data = [session, pause];
-    const svg = d3.select("svg#timerPieChart>g#pieSlicesGroup");
-    const pie = d3Shape.pie<number>().sort(null)(data);
+    const pieGen = d3Shape.pie<number>().sort(null);
+    const prevPie = pieGen([prevSession.current, prevPause.current]);
+    const pie = pieGen([session, pause]);
     const arc = d3Shape.arc<PieArcDatum<number>>().innerRadius(100).outerRadius(240);
-    const rotation = (360 * (timer + (isSession ? 0 : session))) / (session + pause);
-    const pieSlices = svg
+
+    d3.select("svg#timerPieChart>g#pieSlicesGroup")
       .selectChildren("path.pieSlice")
       .data(pie)
       .join("path")
-      .attr("d", arc)
+      .transition()
+      .duration(updateInterval)
+      .ease(d3.easeLinear)
+      .attrTween("d", function (d, i) {
+        const interpolateStart = d3.interpolate(prevPie[i].startAngle, d.startAngle);
+        const interpolateEnd = d3.interpolate(prevPie[i].endAngle, d.endAngle);
+        return function (t) {
+          return arc.startAngle(interpolateStart(t)).endAngle(interpolateEnd(t))({ ...d }) ?? "";
+        };
+      });
+
+    prevSession.current = session;
+    prevPause.current = pause;
+  }, [pause, session]);
+
+  useEffect(() => {
+    const rotation = (360 * (timer + (isSession ? 0 : session))) / (session + pause);
+    const svg = d3
+      .select("svg#timerPieChart>g#pieSlicesGroup")
       .transition()
       .duration(rotation ? updateInterval : updateInterval * 0.6)
       .ease(d3.easeLinear);
-
     if (!rotation && isPlaying) {
-      pieSlices.style("rotate", "0deg").transition().duration(0).style("rotate", "360deg");
+      svg.style("rotate", "0deg").transition().duration(0).style("rotate", "360deg");
     } else {
-      pieSlices.style("rotate", `${360 - rotation}deg`);
+      svg.style("rotate", `${360 - rotation}deg`);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, pause, timer, isSession]);
@@ -196,28 +221,28 @@ function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) 
     <div className="m-4 flex flex-col items-center gap-2">
       <svg
         id="timerPieChart"
-        className="w-4/5 "
+        className="w-4/5 fill-current stroke-[4]"
         viewBox="0 0 500 500"
       >
         <g
           id="pieSlicesGroup"
-          className="fill-current stroke-current stroke-[4]"
+          className="origin-center stroke-current "
         >
           {["session", "pause"].map((x, i) => (
             <path
               key={x}
-              className={`pieSlice origin-center  translate-x-1/2 translate-y-1/2 ${
+              className={`pieSlice origin-center translate-x-1/2 translate-y-1/2 ${
                 !i ? "fill-neutral-800" : ""
               }`}
             ></path>
           ))}
         </g>
         <rect
-          width="2%"
-          y="10"
-          height="140"
           x="49%"
-          className="fill-current stroke-neutral-800 stroke-[4]"
+          y="10"
+          width="2%"
+          height="140"
+          className="stroke-neutral-800"
         />
         <text
           x="50%"
@@ -225,7 +250,6 @@ function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) 
           textAnchor="middle"
           dominantBaseline="middle"
           fontSize={40}
-          className="fill-current"
         >
           <tspan dy="-20">{isSession ? "Session" : "Pause"}</tspan>
           <tspan
@@ -245,11 +269,7 @@ function PomodoroTimer({ pause, session }: Pick<Pomodoro, "session" | "pause">) 
           />
           <ControlButton
             label="reset"
-            action={() => {
-              setIsSession(true);
-              setTimer(0);
-              setIsPlaying(false);
-            }}
+            action={reset}
             icon={<FaFastBackward />}
           />
           <ControlButton

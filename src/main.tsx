@@ -11,7 +11,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <ErrorBoundary
       fallback={
-        <div>
+        <div className="flex flex-col items-center ">
           <p>Something went terribly wrong 😢</p>
           <p>Please try reloading the page and clearing browser cache for this website</p>
         </div>
@@ -19,7 +19,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     >
       <ErrorBoundary
         fallback={
-          <div className="fixed top-1/2 flex -translate-y-1/2 flex-col items-center justify-center">
+          <div className="flex flex-col items-center ">
             <p>There was an error with the app</p>
             <div>
               <span>Please try clearing your browser cache for this website:</span>

@@ -8,7 +8,6 @@ import queryLocalStorage from "./queryLocalStorage";
 export default function App() {
   const dispatchPomodoroList = useSetAtom(pomodoroListAtom);
   const init = useRef(true);
-
   if (init) {
     dispatchPomodoroList({ type: "SET", payload: queryLocalStorage() });
     init.current = false;

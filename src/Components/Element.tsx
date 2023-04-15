@@ -27,34 +27,36 @@ export default function PomodoroListElement({
   return (
     <div
       onClick={selectMe}
-      className={`flex flex-col items-center gap-2 rounded-lg p-2 transition-colors duration-300 ${
+      className={`flex flex-col gap-2 rounded-lg p-2 transition-colors duration-300 ${
         pomodoro.selected ? "bg-neutral-500" : "bg-neutral-700"
       }`}
       aria-selected={true}
     >
-      <div className="max-w-full self-stretch text-lg">
+      <div className="text-lg">
         <InputProperty
           field={pomodoro.name}
           label="NAME"
           edit={value => editValueByKey("name", value)}
         />
       </div>
-      <div className="grid w-full grid-cols-9 gap-2 text-sm ">
-        <div className="m-w-full col-span-4 flex justify-center gap-1">
-          <span>Session:</span>
-          <InputProperty
-            field={pomodoro.session}
-            label="SESSION"
-            edit={value => editValueByKey("session", value)}
-          />
-        </div>
-        <div className="m-w-full  col-span-4 flex justify-center gap-1">
-          <span>Pause:</span>
-          <InputProperty
-            field={pomodoro.pause}
-            label="PAUSE"
-            edit={value => editValueByKey("pause", value)}
-          />
+      <div className="grid grid-cols-9 text-sm ">
+        <div className="col-span-8 grid grid-cols-2  ">
+          <div className=" flex justify-center gap-1">
+            <span>Session:</span>
+            <InputProperty
+              field={pomodoro.session}
+              label="SESSION"
+              edit={value => editValueByKey("session", value)}
+            />
+          </div>
+          <div className=" flex justify-center gap-1">
+            <span>Pause:</span>
+            <InputProperty
+              field={pomodoro.pause}
+              label="PAUSE"
+              edit={value => editValueByKey("pause", value)}
+            />
+          </div>
         </div>
         <button
           onClick={event => {
@@ -62,7 +64,7 @@ export default function PomodoroListElement({
             deleteMe();
           }}
           aria-label="delete"
-          className="col-span-1 w-5 self-end"
+          className="ml-auto w-5"
         >
           <BsTrashFill size="100%" />
         </button>
